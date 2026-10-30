@@ -235,6 +235,19 @@ class OwnerControllerTests {
 	}
 
 	@Test
+	void processFindFormSingleOwnerWithoutPetsRedirectsToNewPet() throws Exception {
+		Owner joe = new Owner();
+		joe.setId(2);
+		joe.setFirstName("Joe");
+		joe.setLastName("Bloggs");
+		when(this.owners.findByLastNameStartingWith(eq("Bloggs"), any(Pageable.class)))
+			.thenReturn(new PageImpl<>(List.of(joe)));
+		mockMvc.perform(get("/owners?page=1").param("lastName", "Bloggs"))
+			.andExpect(status().is3xxRedirection())
+			.andExpect(view().name("redirect:/owners/2/pets/new"));
+	}
+
+	@Test
 	void initUpdateOwnerForm() throws Exception {
 		mockMvc.perform(get("/owners/{ownerId}/edit", TEST_OWNER_ID))
 			.andExpect(status().isOk())

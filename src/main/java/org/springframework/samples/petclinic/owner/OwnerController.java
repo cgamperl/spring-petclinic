@@ -122,6 +122,10 @@ class OwnerController {
 		if (ownersResults.getTotalElements() == 1) {
 			// 1 owner found
 			owner = ownersResults.iterator().next();
+			if (owner.getPets().isEmpty()) {
+				// owner without pets: continue with registering the first pet
+				return "redirect:/owners/" + owner.getId() + "/pets/new";
+			}
 			return "redirect:/owners/" + owner.getId();
 		}
 

@@ -120,9 +120,12 @@ class OwnerController {
 		}
 
 		if (ownersResults.getTotalElements() == 1) {
-			// 1 owner found
-			owner = ownersResults.iterator().next();
-			return "redirect:/owners/" + owner.getId();
+			// 1 owner found: open it directly only if the last name matches exactly,
+			// a prefix match is shown in the list so the user can confirm the hit
+			Owner found = ownersResults.iterator().next();
+			if (found.getLastName().equalsIgnoreCase(lastName)) {
+				return "redirect:/owners/" + found.getId();
+			}
 		}
 
 		// multiple owners found

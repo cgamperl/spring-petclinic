@@ -206,6 +206,19 @@ class OwnerControllerTests {
 	}
 
 	@Test
+	void processFindFormSinglePrefixMatchWithoutPetsShowsList() throws Exception {
+		Owner joe = new Owner();
+		joe.setId(2);
+		joe.setFirstName("Joe");
+		joe.setLastName("Bloggs");
+		when(this.owners.findByLastNameStartingWith(eq("Blo"), any(Pageable.class)))
+			.thenReturn(new PageImpl<>(List.of(joe)));
+		mockMvc.perform(get("/owners?page=1").param("lastName", "Blo"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("owners/ownersList"));
+	}
+
+	@Test
 	void processFindFormIgnoresSurroundingWhitespace() throws Exception {
 		Page<Owner> tasks = new PageImpl<>(List.of(george()));
 		when(this.owners.findByLastNameStartingWith(eq("Franklin"), any(Pageable.class))).thenReturn(tasks);
